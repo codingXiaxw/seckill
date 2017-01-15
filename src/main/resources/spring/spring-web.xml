@@ -31,6 +31,6 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <!--4:扫描web相关的bean-->
+    <!--4:扫描web相关的controller-->
     <context:component-scan base-package="cn.codingxiaxw.web"/>
 </beans>
