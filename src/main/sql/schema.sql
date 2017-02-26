@@ -34,6 +34,6 @@ CREATE TABLE success_killed(
   `create_time` TIMESTAMP NOT NULL COMMENT '创建时间',
   PRIMARY KEY(seckill_id,user_phone),/*联合主键*/
   KEY idx_create_time(create_time)
-)ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='秒杀成功明细表'
+)ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='秒杀成功明细表';
 
   -- SHOW CREATE TABLE seckill;#显示表的创建信息
