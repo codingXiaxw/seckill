@@ -1,13 +1,20 @@
 ## Java高并发秒杀系统API
+## How to play
 
-## 参考
-慕课网秒杀系统的视频教程重新总结了自己使用SSM开发项目的经历。  
+ 1. git clone https://github.com/codingXiaxw/seckill.git
+ 2. open IDEA -->  File  -->  New  --> Open 
+ 3. choose seckill's pom.xml，open it
+ 4. deploy the tomcat，and start up
+ 5. enter in the browser: `http://localhost:8080/seckill/list`
+ 6. enjoy it
+ 
 
-## 开发环境
+## Develop environment
 IDEA+Maven+SSM框架。  
 
-## 写在前面的话
-之前写了一个用[SSM框架搭建的商品查询系统](http://codingxiaxw.cn/2016/11/15/45-smm%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/),分两篇文章分别记录了自己整合SSM框架的过程以及利用SSM开发的一些基础知识，由于那时候刚学完SSM框架，所以自己觉得整合的过程总结的不够好。<!--more-->如今在有了一定的SSM框架开发经验后打算参考慕课网上对秒杀系统的讲解视频再写一个用Maven+SSM做的一个秒杀系统，从头到位记录自己整合SSM框架以及用SS框架M开发这个秒杀系统的过程。maven的强大之处就是你不用再像以前那样，如果在项目中用到spring框架还要到spring官网上去下载一系列的jar包，用了maven对项目进行管理之后你就可以直接在它的pom.xml文件中添加jar包的相应坐标，这样maven就能自动从它的中央仓库中为我们将这些jar包下载到其本地仓库中供我们使用。  
+## Written in front of words
+
+之前写了一个用[SSM框架搭建的商品查询系统](http://codingxiaxw.cn/2016/11/15/45-smm%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/),分两篇文章分别记录了自己整合SSM框架的过程以及利用SSM开发的一些基础知识，由于那时候刚学完SSM框架，所以自己觉得整合的过程总结的不够好。<!--more-->如今在有了一定的SSM框架开发经验后打算参考慕课网上对秒杀系统的讲解视频再写一个用Maven+SSM做的一个秒杀系统，从头到尾记录自己整合SSM框架以及用SS框架M开发这个秒杀系统的过程。maven的强大之处就是你不用再像以前那样，如果在项目中用到spring框架还要到spring官网上去下载一系列的jar包，用了maven对项目进行管理之后你就可以直接在它的pom.xml文件中添加jar包的相应坐标，这样maven就能自动从它的中央仓库中为我们将这些jar包下载到其本地仓库中供我们使用。  
 
 用maven对项目进行管理的知识很简单，关于创建maven项目的知识大家看我的这篇文章便可以在几分钟内掌握:[Maven安装配置及创建你的第一个Maven项目](http://codingxiaxw.cn/2016/11/24/51-first-maven-project/)  
 
@@ -21,7 +28,7 @@ IDEA+Maven+SSM框架。
 
 其实完成这三个模块就可以完成我们的秒杀系统了，但对于我们的秒杀系统中一件秒杀商品，在秒杀的时候肯定会有成千上万的用户参与进来，通过上述三个模块完成的系统无法解决这么多用户的高并发操作，所以我们还需要第四个模块:  
 
-- 4.Java高并发秒杀APi之高并发优化。
+- 4.Java高并发秒杀APi之高并发优化(待更新)。
 
 该系统我将按照上述4个模块通过4篇文章来完成介绍，本篇文章进行第一个模块的讲解及项目的介绍以及Dao层编码的开发。首先看看我们项目的效果图:  
 
