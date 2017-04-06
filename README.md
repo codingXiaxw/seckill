@@ -1,7 +1,7 @@
 ## Java高并发秒杀系统API
 ## How to play
 
- 1. git clone https://github.com/codingXiaxw/seckill.git
+ 1. git clone `https://github.com/codingXiaxw/seckill.git`
  2. open IDEA -->  File  -->  New  --> Open 
  3. choose seckill's pom.xml，open it
  4. update the `jdbc.properties` files about your mysql's username and password
