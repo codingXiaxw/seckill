@@ -58,10 +58,10 @@ public class SeckillController
 
     //ajax ,json暴露秒杀接口的方法
     @RequestMapping(value = "/{seckillId}/exposer",
-                    method = RequestMethod.POST,
+                    method = RequestMethod.GET,
                     produces = {"application/json;charset=UTF-8"})
     @ResponseBody
-    public SeckillResult<Exposer> exposer(Long seckillId)
+    public SeckillResult<Exposer> exposer(@PathVariable("seckillId") Long seckillId)
     {
         SeckillResult<Exposer> result;
         try{
@@ -82,16 +82,16 @@ public class SeckillController
     @ResponseBody
     public SeckillResult<SeckillExecution> execute(@PathVariable("seckillId") Long seckillId,
                                                    @PathVariable("md5") String md5,
-                                                   @CookieValue(value = "killPhone",required = false) Long phone)
+                                                   @CookieValue(value = "userPhone",required = false) Long userPhone)
     {
-        if (phone==null)
+        if (userPhone==null)
         {
             return new SeckillResult<SeckillExecution>(false,"未注册");
         }
         SeckillResult<SeckillExecution> result;
 
         try {
-            SeckillExecution execution = seckillService.executeSeckill(seckillId, phone, md5);
+            SeckillExecution execution = seckillService.executeSeckill(seckillId, userPhone, md5);
             return new SeckillResult<SeckillExecution>(true, execution);
         }catch (RepeatKillException e1)
         {
