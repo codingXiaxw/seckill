@@ -13,12 +13,12 @@
     <!--2.数据库连接池-->
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <!--配置连接池属性-->
-        <property name="driverClass" value="${driver}" />
+        <property name="driverClass" value="${jdbc.driver}" />
 
         <!-- 基本属性 url、user、password -->
-        <property name="jdbcUrl" value="${url}" />
-        <property name="user" value="${username}" />
-        <property name="password" value="${password}" />
+        <property name="jdbcUrl" value="${jdbc.url}" />
+        <property name="user" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
 
         <!--c3p0私有属性-->
         <property name="maxPoolSize" value="30"/>
@@ -56,7 +56,7 @@
 
     <!--redisDao-->
     <bean id="redisDao" class="cn.codingxiaxw.dao.cache.RedisDao">
-        <constructor-arg index="0" value="localhost"/>
+        <constructor-arg index="0" value="192.168.30.194"/>
         <constructor-arg index="1" value="6379"/>
     </bean>
 </beans>
