@@ -23,16 +23,23 @@ public class RedisDao {
 
     private RuntimeSchema<Seckill> schema = RuntimeSchema.createFrom(Seckill.class);
 
+    public Seckill getSeckill(long seckillId) {
+        return getSeckill(seckillId, null);
+    }
+
     /**
      * 从redis获取信息
      *
      * @param seckillId id
      * @return 如果不存在，则返回null
      */
-    public Seckill getSeckill(long seckillId) {
+    public Seckill getSeckill(long seckillId, Jedis jedis) {
+        boolean hasJedis = jedis != null;
         //redis操作逻辑
         try {
-            Jedis jedis = jedisPool.getResource();
+            if (!hasJedis) {
+                jedis = jedisPool.getResource();
+            }
             try {
                 String key = getSeckillRedisKey(seckillId);
                 //并没有实现哪部序列化操作
@@ -48,7 +55,9 @@ public class RedisDao {
                     return seckill;
                 }
             } finally {
-                jedis.close();
+                if (!hasJedis) {
+                    jedis.close();
+                }
             }
         } catch (Exception e) {
 
@@ -65,38 +74,41 @@ public class RedisDao {
      * @return 返回商品信息
      */
     public Seckill getOrPutSeckill(long seckillId, Function<Long, Seckill> getDataFromDb) {
-        Seckill seckill = getSeckill(seckillId);
-        if (seckill != null) {
-            return seckill;
-        }
 
         String lockKey = "seckill:locks:getSeckill:" + seckillId;
         String lockRequestId = UUID.randomUUID().toString();
         Jedis jedis = jedisPool.getResource();
-        // 尝试获取锁。
-        // 锁过期时间是防止程序突然崩溃来不及解锁，而造成其他线程不能获取锁的问题。过期时间是业务容忍最长时间。
-        boolean getLock = JedisUtils.tryGetDistributedLock(jedis, lockKey, lockRequestId, 1000);
-        if (getLock) {
-            // 获取到锁，从数据库拿数据, 然后存redis
-            try {
-                seckill = getDataFromDb.apply(seckillId);
-                putSeckill(seckill);
-            } catch (Exception ignored) {
-            } finally {
-                // 无论如何，最后要去解锁
-                JedisUtils.releaseDistributedLock(jedis, lockKey, lockRequestId);
-            }
-            return seckill;
-        }
 
-        // 获取不到锁，睡一下，等会再出发。sleep的时间需要斟酌，主要看业务处理速度
         try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return getOrPutSeckill(seckillId, getDataFromDb);
+            // 循环直到获取到数据
+            while (true) {
+                Seckill seckill = getSeckill(seckillId, jedis);
+                if (seckill != null) {
+                    return seckill;
+                }
+                // 尝试获取锁。
+                // 锁过期时间是防止程序突然崩溃来不及解锁，而造成其他线程不能获取锁的问题。过期时间是业务容忍最长时间。
+                boolean getLock = JedisUtils.tryGetDistributedLock(jedis, lockKey, lockRequestId, 1000);
+                if (getLock) {
+                    // 获取到锁，从数据库拿数据, 然后存redis
+                    seckill = getDataFromDb.apply(seckillId);
+                    putSeckill(seckill, jedis);
+                    return seckill;
+                }
 
+                // 获取不到锁，睡一下，等会再出发。sleep的时间需要斟酌，主要看业务处理速度
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ignored) {
+                }
+            }
+        } catch (Exception ignored) {
+        } finally {
+            // 无论如何，最后要去解锁
+            JedisUtils.releaseDistributedLock(jedis, lockKey, lockRequestId);
+            jedis.close();
+        }
+        return null;
     }
 
     /**
@@ -110,8 +122,15 @@ public class RedisDao {
     }
 
     public String putSeckill(Seckill seckill) {
+        return putSeckill(seckill, null);
+    }
+
+    public String putSeckill(Seckill seckill, Jedis jedis) {
+        boolean hasJedis = jedis != null;
         try {
-            Jedis jedis = jedisPool.getResource();
+            if (!hasJedis) {
+                jedis = jedisPool.getResource();
+            }
             try {
                 String key = getSeckillRedisKey(seckill.getSeckillId());
                 byte[] bytes = ProtostuffIOUtil.toByteArray(seckill, schema,
@@ -122,7 +141,9 @@ public class RedisDao {
 
                 return result;
             } finally {
-                jedis.close();
+                if (!hasJedis) {
+                    jedis.close();
+                }
             }
         } catch (Exception e) {
 
