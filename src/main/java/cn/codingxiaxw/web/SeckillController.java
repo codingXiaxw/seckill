@@ -96,16 +96,16 @@ public class SeckillController
         }catch (RepeatKillException e1)
         {
             SeckillExecution execution=new SeckillExecution(seckillId, SeckillStatEnum.REPEAT_KILL);
-            return new SeckillResult<SeckillExecution>(true,execution);
+            return new SeckillResult<SeckillExecution>(false,execution);
         }catch (SeckillCloseException e2)
         {
             SeckillExecution execution=new SeckillExecution(seckillId, SeckillStatEnum.END);
-            return new SeckillResult<SeckillExecution>(true,execution);
+            return new SeckillResult<SeckillExecution>(false,execution);
         }
         catch (Exception e)
         {
             SeckillExecution execution=new SeckillExecution(seckillId, SeckillStatEnum.INNER_ERROR);
-            return new SeckillResult<SeckillExecution>(true,execution);
+            return new SeckillResult<SeckillExecution>(false,execution);
         }
 
     }
