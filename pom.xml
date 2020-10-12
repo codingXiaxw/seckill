@@ -12,7 +12,7 @@
       <!--3.0的junit是使用编程的方式来进行测试，而junit4是使用注解的方式来运行junit-->
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>4.13.1</version>
       <scope>test</scope>
     </dependency>
 
